@@ -1,0 +1,40 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: example
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+ 
+  server:
+    build: server
+    restart: always
+    environment:
+      PGUSER: user
+      PGPASSWORD: password
+      PGHOST: db
+      PGDATABASE: example
+    volumes:
+      - ./proto:/usr/src/app/proto
+  
+  client:
+    build: client
+    restart: always
+    ports:
+      - 3000:3000
+    volumes:
+      - ./proto:/usr/src/app/proto
+    
+  cache:
+    image: bitnami/redis
+    ports:
+      - 6379:6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_MAXMEMORY_POLICY = "allkeys-lru"
+

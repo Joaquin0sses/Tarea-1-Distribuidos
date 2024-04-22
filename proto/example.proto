@@ -1,0 +1,22 @@
+syntax = "proto3";
+package example;
+
+service Example {
+    rpc GetById(Query) returns (Persona);
+    rpc GetAll(Empty) returns (PersonaList);
+}
+
+message Persona {
+     int32 id = 1;
+     string value = 2;
+}
+
+message PersonaList {
+    repeated Persona list = 1;
+}
+
+message Query {
+    int32 id = 1;
+}
+
+message Empty {}
